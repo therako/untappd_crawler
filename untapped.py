@@ -145,6 +145,9 @@ class UntappdScrapper():
         return user_top_veneus
 
 
+# From https://www.niaaa.nih.gov/alcohol-health/overview-alcohol-consumption/moderate-binge-drinking
+# Binge Drinking = 5 or more drinks in a 2 hour window
+# Heavy Drinking = 5 or more days of Binge Drinking in a month
 if __name__ == "__main__":
     _parser = argparse.ArgumentParser(description="Grab Untappd user activity")
     _parser.add_argument("-u", "--user", required=True, help="Username to research")
