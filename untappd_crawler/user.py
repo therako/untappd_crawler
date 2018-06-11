@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import argparse
 import json
 import requests
 
@@ -11,8 +10,11 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 12.0; WOW64) AppleWebKit/" + \
 HEADERS = {"User-Agent": USER_AGENT}
 
 
-class UntappdScrapper():
-    """UntappdScrapper - get user stats"""
+# From https://www.niaaa.nih.gov/alcohol-health/overview-alcohol-consumption/moderate-binge-drinking
+# Binge Drinking = 5 or more drinks in a 2 hour window
+# Heavy Drinking = 5 or more days of Binge Drinking in a month
+class User():
+    """User - get user stats"""
 
     def __init__(self, args):
         self._args = args
@@ -27,7 +29,7 @@ class UntappdScrapper():
         )
         return user_data
 
-    def _get_web_page_from_untapped(self, url):
+    def _get_web_page_from_untappd(self, url):
         try:
             response = requests.get(url, headers=HEADERS, timeout=20)
             response.raise_for_status()
@@ -37,7 +39,7 @@ class UntappdScrapper():
 
     def _get_user_stats(self):
         url = "https://untappd.com/user/{}".format(self._args.user)
-        page = self._get_web_page_from_untapped(url)
+        page = self._get_web_page_from_untappd(url)
         return self._parse_user_stats_page(page)
 
     def _parse_user_stats_page(self, page):
@@ -52,7 +54,7 @@ class UntappdScrapper():
 
     def _get_user_friends(self):
         url = "https://untappd.com/user/{}/friends".format(self._args.user)
-        page = self._get_web_page_from_untapped(url)
+        page = self._get_web_page_from_untappd(url)
         return self._parse_user_friends_page(page)
 
     def _parse_user_friends_page(self, page):
@@ -65,7 +67,7 @@ class UntappdScrapper():
 
     def _get_user_beers(self, sort="date"):
         url = "https://untappd.com/user/{}/beers?sort={}".format(self._args.user, sort)
-        page = self._get_web_page_from_untapped(url)
+        page = self._get_web_page_from_untappd(url)
         return self._parse_user_beers_page(page)
 
     def _parse_user_beers_page(self, page):
@@ -109,7 +111,7 @@ class UntappdScrapper():
 
     def _get_user_top_venues(self):
         url = "https://untappd.com/user/{}/venues?type=&sort=highest_checkin".format(self._args.user)
-        page = self._get_web_page_from_untapped(url)
+        page = self._get_web_page_from_untappd(url)
         return self._parse_user_top_venues(page)
 
     def _parse_user_top_venues(self, page):
@@ -143,18 +145,3 @@ class UntappdScrapper():
             venue_infos['vist_info'] = venue_visit_info
             user_top_veneus.append(venue_infos)
         return user_top_veneus
-
-
-# From https://www.niaaa.nih.gov/alcohol-health/overview-alcohol-consumption/moderate-binge-drinking
-# Binge Drinking = 5 or more drinks in a 2 hour window
-# Heavy Drinking = 5 or more days of Binge Drinking in a month
-if __name__ == "__main__":
-    _parser = argparse.ArgumentParser(description="Grab Untappd user activity")
-    _parser.add_argument("-u", "--user", required=True, help="Username to research")
-    _parser.add_argument("-o", "--output_file", default=None, help="Output user data to a json file")
-    _args = _parser.parse_args()
-    _untappdScrapper = UntappdScrapper(_args)
-    user_data = _untappdScrapper.fetch_user_data()
-    print(user_data)
-    with open(_args.output_file, "w+") as f:
-        f.write(json.dumps(user_data))

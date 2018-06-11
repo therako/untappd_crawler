@@ -1,0 +1,25 @@
+#!/bin/python
+import argparse
+import json
+from untappd_crawler import Beer, User
+
+
+_parser = argparse.ArgumentParser(description="Grab Untappd user activity")
+_parser.add_argument("-o", "--output_file", default=None,
+                     help="Output user data to a json file")
+_parser.add_argument("-u", "--user", default=None,
+                     help="Username to research")
+_parser.add_argument("-b", "--beer_ids", default=None,
+                     nargs='+', help="Array of beer ids from untappd")
+_args = _parser.parse_args()
+result = None
+if(_args.user != None):
+    _untappdScrapper = User(_args)
+    result = _untappdScrapper.fetch_user_data()
+elif(_args.beer_ids != None):
+    _untappdScrapper = Beer(_args)
+    result = _untappdScrapper.fetch_beer_data()
+
+if result != None:
+    with open(_args.output_file, "w+") as f:
+        f.write(json.dumps(result))

@@ -11,8 +11,8 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 12.0; WOW64) AppleWebKit/" + \
 HEADERS = {"User-Agent": USER_AGENT}
 
 
-class UntappdScrapperBeer():
-    """UntappdScrapperBeer - get beer stats"""
+class Beer():
+    """Beer - get beer stats"""
 
     def __init__(self, args):
         self._args = args
@@ -24,7 +24,7 @@ class UntappdScrapperBeer():
                 self._get_beer_stats(beer_id))
         return _beer_stats
 
-    def _get_web_page_from_untapped(self, url):
+    def _get_web_page_from_untappd(self, url):
         try:
             response = requests.get(url, headers=HEADERS, timeout=20)
             response.raise_for_status()
@@ -34,7 +34,7 @@ class UntappdScrapperBeer():
 
     def _get_beer_stats(self, beer_id):
         url = "https://untappd.com/beer/{}".format(beer_id)
-        page = self._get_web_page_from_untapped(url)
+        page = self._get_web_page_from_untappd(url)
         return self._parse_beer_stats_page(page, beer_id)
 
     def _parse_beer_stats_page(self, page, beer_id):
@@ -58,16 +58,3 @@ class UntappdScrapperBeer():
             value = stat.find_class("count")[0].text_content()
             beer_stats[title] = value
         return beer_stats
-
-
-if __name__ == "__main__":
-    _parser = argparse.ArgumentParser(description="Untappd beer stats")
-    _parser.add_argument("-b", "--beer_ids", required=True,
-                         nargs='+', help="Array of beer ids from untappd")
-    _parser.add_argument("-o", "--output_file", default=None, help="Output beer data to a json file")
-    _args = _parser.parse_args()
-    _untappdScrapper = UntappdScrapperBeer(_args)
-    beer_data = _untappdScrapper.fetch_beer_data()
-    print(beer_data)
-    with open(_args.output_file, "w+") as f:
-        f.write(json.dumps(beer_data))
