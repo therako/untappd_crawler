@@ -14,12 +14,12 @@ HEADERS = {"User-Agent": USER_AGENT}
 class Beer():
     """Beer - get beer stats"""
 
-    def __init__(self, args):
-        self._args = args
+    def __init__(self, beer_ids):
+        self._beer_ids = beer_ids
 
     def fetch_beer_data(self):
         _beer_stats = []
-        for beer_id in self._args.beer_ids:
+        for beer_id in self._beer_ids:
             _beer_stats.append(
                 self._get_beer_stats(beer_id))
         return _beer_stats

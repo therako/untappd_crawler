@@ -35,7 +35,7 @@ setup(
     url='https://github.com/therako/untappd_crawler',
     description='A CLI client for exporting elasticsearch data to csv',
     long_description=README,
-    version='0.1',
+    version='0.2',
     packages=find_packages(exclude=('tests',)),
     cmdclass={'test': PyTest},
     scripts=('bin/untappd_crawler',),

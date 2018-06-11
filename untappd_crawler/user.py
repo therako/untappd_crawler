@@ -16,8 +16,8 @@ HEADERS = {"User-Agent": USER_AGENT}
 class User():
     """User - get user stats"""
 
-    def __init__(self, args):
-        self._args = args
+    def __init__(self, username):
+        self._username = username
 
     def fetch_user_data(self):
         user_data = dict(
@@ -38,7 +38,7 @@ class User():
             print("Error from Untappd: {}".format(str(e)))
 
     def _get_user_stats(self):
-        url = "https://untappd.com/user/{}".format(self._args.user)
+        url = "https://untappd.com/user/{}".format(self._username)
         page = self._get_web_page_from_untappd(url)
         return self._parse_user_stats_page(page)
 
@@ -53,7 +53,7 @@ class User():
         return user_stats
 
     def _get_user_friends(self):
-        url = "https://untappd.com/user/{}/friends".format(self._args.user)
+        url = "https://untappd.com/user/{}/friends".format(self._username)
         page = self._get_web_page_from_untappd(url)
         return self._parse_user_friends_page(page)
 
@@ -66,7 +66,7 @@ class User():
         return user_friends
 
     def _get_user_beers(self, sort="date"):
-        url = "https://untappd.com/user/{}/beers?sort={}".format(self._args.user, sort)
+        url = "https://untappd.com/user/{}/beers?sort={}".format(self._username, sort)
         page = self._get_web_page_from_untappd(url)
         return self._parse_user_beers_page(page)
 
@@ -110,7 +110,7 @@ class User():
         return user_beers
 
     def _get_user_top_venues(self):
-        url = "https://untappd.com/user/{}/venues?type=&sort=highest_checkin".format(self._args.user)
+        url = "https://untappd.com/user/{}/venues?type=&sort=highest_checkin".format(self._username)
         page = self._get_web_page_from_untappd(url)
         return self._parse_user_top_venues(page)
 

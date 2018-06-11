@@ -14,10 +14,10 @@ _parser.add_argument("-b", "--beer_ids", default=None,
 _args = _parser.parse_args()
 result = None
 if(_args.user != None):
-    _untappdScrapper = User(_args)
+    _untappdScrapper = User(_args.user)
     result = _untappdScrapper.fetch_user_data()
 elif(_args.beer_ids != None):
-    _untappdScrapper = Beer(_args)
+    _untappdScrapper = Beer(_args.beer_ids)
     result = _untappdScrapper.fetch_beer_data()
 
 if result != None:
